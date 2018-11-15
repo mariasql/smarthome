@@ -7,6 +7,8 @@ import requests
 from slacker import Slacker
 import json
 
+#test comment
+
 config_file = sys.argv[1]
 
 config_content = open(config_file)
