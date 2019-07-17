@@ -136,7 +136,7 @@ while 1:
                     logging.info(txt)
                     post_slack(txt)
 
-                    capture_snapshot()
+                    #capture_snapshot()
 
                 old = sens
 
