@@ -8,40 +8,72 @@ import time
 import logging
 from logging.handlers import RotatingFileHandler
 from slacker import Slacker
-#import psycopg2
-import snapshot as s
 import requests
-import psutil
 import sys
+import json
+
+config_content = open("config.yaml")
+config = json.load(config_content)
 
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
 
-host_ip =  '192.168.1.104' #find_host()
-minipc_ip = "192.168.1.111"
-camera_ip = "192.168.1.102"
-camera_url = "rtsp://admin:admin@{}/onvif1".format(camera_ip)
-slack_token = 'xoxp-418797077840-420549511911-420090210225-01c9b2a42124c96bce1815b3dfc2059c'
-slack_channel = '#broadlink'
+camera_ip = config.get("camera_ip", "")
+camera_url = config.get("camera_url", "").format(camera_ip)
+slack_token = config.get("slack_token", "")
+slack_channel = config.get("slack_channel", "")
+minipc_ip = config.get("minipc_ip", "")
+host_ip = config.get("host_ip", "")
+
 image_title = 'rec_frame.jpg'
 
+def capture_snapshot(camera_url,image_title,slack_token,slack_channel):
+    dirname = r""
+    # video path
+    cap = cv2.VideoCapture(camera_url, cv2.CAP_FFMPEG)
+
+    if cap.isOpened():
+        ret, frame = cap.read()
+        cv2.imshow('frame', frame)
+        # The received "frame" will be saved. Or you can manipulate "frame" as per your needs.
+        name = os.path.join(dirname, image_title)
+        #print name
+        cv2.imwrite(name, frame)
 
 
-#for process in psutil.process_iter():
-#    if process.cmdline() == ['python', 'discover.py']:
-#        sys.exit('Process found: exiting.')
+        my_file = {
+            'file': (image_title, open(image_title, 'rb'), 'gif')
+        }
 
-logfilename = r"c:\broadlink\myerror.log"
+        payload = {
+            "filename": image_title,
+            "token": slack_token,
+            "channels": [slack_channel],
+        }
+
+        try:
+            r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
+        except:
+            message = str(sys.exc_info())
+            post_slack(message)
+
+    cap.release()
+
+    cv2.destroyAllWindows()
+
+
+logfilename = r"smarthome.log"
 logfile = open(logfilename, 'a')
 
-
-def post_slack(text_msg):
+def post_slack(text_msg,slack_token,slack_channel):
     try:
         slack = Slacker(slack_token)
 
         slack.chat.post_message(slack_channel, text_msg)
 
-    except:
-        print ("Error posting text")
+    except Exception as exc:
+        exception = str(exc)
+        print ("Error posting to Slack, {}".format(exception))
+        print (text_msg)
 
 def setlogging():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s  - %(message)s',
@@ -54,10 +86,6 @@ def setlogging():
     logging.getLogger('urllib3').setLevel(logging.WARNING)
     logging.getLogger("requests").setLevel(logging.WARNING)
 
-
-
-#conn = psycopg2.connect(host=minipc_ip,database="smarthome", user="broadlink", password="broadlink")
-#cur = conn.cursor()
 
 setlogging()
 
@@ -73,9 +101,8 @@ sens = devices.get_sensors_status()
 old = sens
 
 for i, se in enumerate(sens['sensors']):
-    #prin'Name:', se['name'], 'Status:', se['status'], 'Type:', se['type'])
     txt = 'Name:{}, status:{}, type: {}'.format(se['name'],se['status'],se['type'])
-    post_slack(txt)
+    post_slack(txt,slack_token,slack_channel)
 
 while 1:
     try:
@@ -85,49 +112,31 @@ while 1:
                 sName = se['name']
                 sType = se['type']
                 if sType == "Door Sensor":
-                    if str(se['status']) == "0" or str(se['status']) == "128": # Instead of sType you can test for sName in case you have multiple sensors
+                    if str(se['status']) == "0" or str(se['status']) == "128":
                         txt = time.ctime() + ': Door closed ( status {} )'.format(str(se['status']))
                         logging.info(txt)
-                        post_slack(txt)
-                        #cur.execute("INSERT INTO sensors_log VALUES (%s, %s, %s, %s)",
-                        #            (time.ctime(), sType, str(se['status']), 'Door closed'))
-                        #conn.commit()
+                        post_slack(txt,slack_token,slack_channel)
                     elif str(se['status']) == "16" or str(se['status']) == "144":
                         txt = time.ctime() + ': Door opened ( status {})'.format(str(se['status']))
                         logging.info(txt)
-                        post_slack(txt)
-                        #cur.execute("INSERT INTO sensors_log VALUES (%s, %s, %s, %s)",
-                        #            (time.ctime(), sType, str(se['status']), 'Door opened'))
-                        #conn.commit()
+                        post_slack(txt,slack_token,slack_channel)
 
                     elif str(se['status']) == "48":
                         txt = time.ctime() + ':Door tampered ( status ' + str(se['status']) + ')'
                         logging.info(txt)
-                        post_slack(txt)
-                        #cur.execute("INSERT INTO sensors_log VALUES (%s, %s, %s, %s)",
-                        #            (time.ctime(), sType, str(se['status']), 'Door tampered'))
-                        #conn.commit()
+                        post_slack(txt,slack_token,slack_channel)
+
                 elif sType == 'Motion Sensor' and str(se['status']) == "0" or sType == "Motion Sensor" and str(se['status']) == "32" or sType == "Motion Sensor" and str(se['status']) == "128":
                     txt = time.ctime() + ": No Motion: " + str(se['status'])
                     logging.info(txt)
-                    post_slack(txt)
-                    #cur.execute("INSERT INTO sensors_log VALUES (%s, %s, %s, %s)",
-                    #            (time.ctime(), sType, str(se['status']), 'No motion'))
-                    #conn.commit()
+                    post_slack(txt,slack_token,slack_channel)
+
                 elif sType == "Motion Sensor" and str(se['status']) == "48":
-                    txt = time.ctime() + ": Motion Detected: " + str(se['status']) + ", old status" + str(old['sensors'][i]['status'])
+                    txt = time.ctime() + ": Motion Detected: " + str(se['status'])
                     logging.info(txt)
-                    post_slack(txt)
-                    #cur.execute("INSERT INTO sensors_log VALUES (%s, %s, %s, %s)",
-                    #            (time.ctime(), sType, str(se['status']), 'Motion Detected'))
-                    #conn.commit()
-                    try:
-                        s.capture_snapshot()
-                    except Exception as e:
-                        message = str(sys.exc_info())
-                        print message
+                    post_slack(txt,slack_token,slack_channel)
 
                 old = sens
-               # time.sleep(15)
+
     except:
         continue
