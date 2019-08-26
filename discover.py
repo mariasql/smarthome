@@ -24,7 +24,7 @@ slack_channel = config.get("slack_channel", "")
 minipc_ip = config.get("minipc_ip", "")
 host_ip = config.get("host_ip", "")
 
-image_title = 'rec_frame.jpg'
+image_title = "rec_frame.jpg"
 
 def capture_snapshot(camera_url,image_title,slack_token,slack_channel):
     dirname = r""
