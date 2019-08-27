@@ -23,9 +23,10 @@ camera_ip = config.get("camera_ip", "")
 camera_url = config.get("camera_url", "").format(camera_ip)
 
 slack_url = config.get("slack_url", "")
+slack_token = config.get("slack_token", "")
 
 
-def capture_snapshot():
+def capture_snapshot(slack_token):
     dirname = r""
     # video path
     cap = cv2.VideoCapture(camera_url, cv2.CAP_FFMPEG)
@@ -44,7 +45,7 @@ def capture_snapshot():
 
         payload = {
             "filename": "outdoor.jpg",
-            "token": 'xoxp-418797077840-420549511911-728768909955-b06ab46600dcdd7e0122e941633f6b55',
+            "token": slack_token,
             "channels": ['#broadlink'],
         }
 
@@ -70,7 +71,7 @@ def post_slack(text_msg,slack_url):
 
 
 try:
-    capture_snapshot()
+    capture_snapshot(slack_token)
     post_slack('Image posted. Have a great day',slack_url)
 except Exception as e:
     message = str(sys.exc_info())
