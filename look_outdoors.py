@@ -9,7 +9,9 @@ import json
 
 #test comment
 
-config_file = sys.argv[1]
+camera_ip = sys.argv[1]
+
+config_content = open("config.yaml")
 
 config_content = open(config_file)
 config = json.load(config_content)
@@ -19,7 +21,7 @@ os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
 # Below code will capture the video frames and will sve it a folder (in current working directory)
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
 
-camera_ip = config.get("camera_ip", "")
+#camera_ip = config.get("camera_ip", "")
 camera_url = config.get("camera_url", "").format(camera_ip)
 
 slack_url = config.get("slack_url", "")
