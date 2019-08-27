@@ -9,9 +9,9 @@ import json
 
 #test comment
 
-config_file = sys.argv[1]
+#config_file = sys.argv[1]
 
-config_content = open(config_file)
+config_content = open("window_camera.yaml")
 config = json.load(config_content)
 
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
@@ -25,7 +25,7 @@ camera_url = config.get("camera_url", "").format(camera_ip)
 slack_url = config.get("slack_url", "")
 slack_token = config.get("slack_token", "")
 slack_channel = config.get("slack_channel", "")
-
+to
 
 def capture_snapshot(slack_token):
     dirname = r""
