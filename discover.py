@@ -11,6 +11,7 @@ from slacker import Slacker
 import requests
 import sys
 import json
+import look_outdoors as lib
 
 config_content = open("config.yaml")
 config = json.load(config_content)
@@ -20,6 +21,7 @@ os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
 camera_ip = config.get("camera_ip", "")
 camera_url = config.get("camera_url", "").format(camera_ip)
 slack_url = config.get("slack_url", "")
+slack_token = config.get("slack_token", "")
 minipc_ip = config.get("minipc_ip", "")
 host_ip = config.get("host_ip", "")
 
@@ -28,19 +30,19 @@ host_ip = config.get("host_ip", "")
 logfilename = r"smarthome.log"
 logfile = open(logfilename, 'a')
 
-def post_slack(text_msg,slack_url):
-    webhook_url = slack_url
-    slack_data = {'text': text_msg}
-
-    response = requests.post(
-        webhook_url, data=json.dumps(slack_data),
-        headers={'Content-Type': 'application/json'}
-    )
-    if response.status_code != 200:
-        raise ValueError(
-            'Request to slack returned an error %s, the response is:\n%s'
-            % (response.status_code, response.text)
-        )
+# def post_slack(text_msg,slack_url):
+#     webhook_url = slack_url
+#     slack_data = {'text': text_msg}
+#
+#     response = requests.post(
+#         webhook_url, data=json.dumps(slack_data),
+#         headers={'Content-Type': 'application/json'}
+#     )
+#     if response.status_code != 200:
+#         raise ValueError(
+#             'Request to slack returned an error %s, the response is:\n%s'
+#             % (response.status_code, response.text)
+#         )
 
 
 def setlogging():
@@ -70,7 +72,7 @@ old = sens
 
 for i, se in enumerate(sens['sensors']):
     txt = 'Name:{}, status:{}, type: {}'.format(se['name'],se['status'],se['type'])
-    post_slack(txt,slack_url)
+    lib.post_slack(txt,slack_url)
 
 while 1:
     try:
@@ -83,26 +85,28 @@ while 1:
                     if str(se['status']) == "0" or str(se['status']) == "128":
                         txt = time.ctime() + ': Door closed ( status {} )'.format(str(se['status']))
                         logging.info(txt)
-                        post_slack(txt,slack_url)
+                        lib.post_slack(txt,slack_url)
                     elif str(se['status']) == "16" or str(se['status']) == "144":
                         txt = time.ctime() + ': Door opened ( status {})'.format(str(se['status']))
                         logging.info(txt)
-                        post_slack(txt,slack_url)
+                        lib.post_slack(txt,slack_url)
 
                     elif str(se['status']) == "48":
                         txt = time.ctime() + ':Door tampered ( status ' + str(se['status']) + ')'
                         logging.info(txt)
-                        post_slack(txt,slack_url)
+                        lib.post_slack(txt,slack_url)
 
                 elif sType == 'Motion Sensor' and str(se['status']) == "0" or sType == "Motion Sensor" and str(se['status']) == "32" or sType == "Motion Sensor" and str(se['status']) == "128":
                     txt = time.ctime() + ": No Motion: " + str(se['status'])
                     logging.info(txt)
-                    post_slack(txt,slack_url)
+                    lib.post_slack(txt,slack_url)
 
                 elif sType == "Motion Sensor" and str(se['status']) == "48":
                     txt = time.ctime() + ": Motion Detected: " + str(se['status'])
                     logging.info(txt)
-                    post_slack(txt,slack_url)
+                    lib.post_slack(txt,slack_url)
+
+                    lib.capture_snapshot(slack_token)
 
                 old = sens
 

@@ -1,7 +1,0 @@
-{
-    "slack_url": "https://hooks.slack.com/services/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",
-    "camera_ip": "192.168.1.102",
-    "camera_url": "rtsp://admin:admin@{}/onvif1",
-    "slack_channel": "#broadlink"
-
-}
