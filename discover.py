@@ -23,47 +23,6 @@ slack_url = config.get("slack_url", "")
 minipc_ip = config.get("minipc_ip", "")
 host_ip = config.get("host_ip", "")
 
-image_title = "rec_frame.jpg"
-
-def capture_snapshot(camera_url,image_title,slack_url):
-    dirname = r""
-    # video path
-    cap = cv2.VideoCapture(camera_url, cv2.CAP_FFMPEG)
-
-    if cap.isOpened():
-        ret, frame = cap.read()
-        cv2.imshow('frame', frame)
-        # The received "frame" will be saved. Or you can manipulate "frame" as per your needs.
-        name = os.path.join(dirname, image_title)
-        #print name
-        cv2.imwrite(name, frame)
-
-        slack_data = {'file': text_msg}
-
-        response = requests.post(
-            slack_url, data=json.dumps(slack_data),
-            headers={'Content-Type': 'application/json'}
-        )
-        my_file = {
-            'file': (image_title, open(image_title, 'rb'), 'gif')
-        }
-
-        payload = {
-            "filename": image_title,
-            #"token": slack_token,
-            #"channels": [slack_channel],
-        }
-
-        try:
-            #r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
-        except:
-            message = str(sys.exc_info())
-            post_slack(message)
-
-    cap.release()
-
-    cv2.destroyAllWindows()
-
 
 logfilename = r"smarthome.log"
 logfile = open(logfilename, 'a')

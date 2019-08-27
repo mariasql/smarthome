@@ -44,8 +44,8 @@ def capture_snapshot():
 
         payload = {
             "filename": "outdoor.jpg",
-            "token": slack_token,
-            "channels": [slack_channel],
+            "token": 'xoxp-418797077840-420549511911-728768909955-b06ab46600dcdd7e0122e941633f6b55',
+            "channels": ['#broadlink'],
         }
 
         r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
@@ -55,18 +55,23 @@ def capture_snapshot():
 
 
 def post_slack(text_msg,slack_url):
-    try:
-        slack = Slacker(slack_token)
+    webhook_url = slack_url
+    slack_data = {'text': text_msg}
 
-        slack.chat.post_message(slack_channel, text_msg)
+    response = requests.post(
+        webhook_url, data=json.dumps(slack_data),
+        headers={'Content-Type': 'application/json'}
+    )
+    if response.status_code != 200:
+        raise ValueError(
+            'Request to slack returned an error %s, the response is:\n%s'
+            % (response.status_code, response.text)
+        )
 
-    except:
-        message = str(sys.exc_info())
-        print (message)
 
 try:
     capture_snapshot()
-    post_slack('Image posted. Have a great day')
+    post_slack('Image posted. Have a great day',slack_url)
 except Exception as e:
     message = str(sys.exc_info())
     post_slack(message)
