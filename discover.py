@@ -38,15 +38,20 @@ def capture_snapshot(camera_url,image_title,slack_url):
         #print name
         cv2.imwrite(name, frame)
 
+        slack_data = {'file': text_msg}
 
+        response = requests.post(
+            slack_url, data=json.dumps(slack_data),
+            headers={'Content-Type': 'application/json'}
+        )
         my_file = {
             'file': (image_title, open(image_title, 'rb'), 'gif')
         }
 
         payload = {
             "filename": image_title,
-            "token": slack_token,
-            "channels": [slack_channel],
+            #"token": slack_token,
+            #"channels": [slack_channel],
         }
 
         try:
