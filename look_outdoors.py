@@ -24,6 +24,7 @@ camera_url = config.get("camera_url", "").format(camera_ip)
 
 slack_url = config.get("slack_url", "")
 slack_token = config.get("slack_token", "")
+slack_channel = config.get("slack_channel", "")
 
 
 def capture_snapshot(slack_token):
@@ -46,7 +47,7 @@ def capture_snapshot(slack_token):
         payload = {
             "filename": "outdoor.jpg",
             "token": slack_token,
-            "channels": ['#broadlink'],
+            "channels": [slack_channel],
         }
 
         r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
