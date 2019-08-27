@@ -24,6 +24,7 @@ minipc_ip = config.get("minipc_ip", "")
 host_ip = config.get("host_ip", "")
 
 
+
 logfilename = r"smarthome.log"
 logfile = open(logfilename, 'a')
 
