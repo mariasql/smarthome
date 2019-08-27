@@ -19,7 +19,7 @@ os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
 
 camera_ip = config.get("camera_ip", "")
 camera_url = config.get("camera_url", "").format(camera_ip)
-slack_url = config.get("slack_url", "")
+slack_url = config.get("slack_url")
 minipc_ip = config.get("minipc_ip", "")
 host_ip = config.get("host_ip", "")
 
@@ -56,6 +56,7 @@ def capture_snapshot(camera_url,image_title,slack_url):
 
         try:
             #r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
+            print 1
         except:
             message = str(sys.exc_info())
             post_slack(message)

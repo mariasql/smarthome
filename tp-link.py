@@ -2,7 +2,7 @@ import urllib2
 #import database_statistics
 
 def getRouterUrl():
-    return 'http://192.168.0.1' #Ip to TP-Link router
+    return 'http://192.168.1.1' #Ip to TP-Link router
 
 def SetupRouterConnection():
 
@@ -14,7 +14,7 @@ def SetupRouterConnection():
 
    p.add_password(None, getRouterUrl(), username, password)
 
-   handler = urllib2.HTTPBasicAuthHandler(p)
+   handler = urllib2.--(p)
    opener = urllib2.build_opener(handler)
    urllib2.install_opener(opener)
    return True
@@ -60,7 +60,7 @@ def getStatistics():
 
     return stats
 
-#SetupRouterConnection()
+SetupRouterConnection()
 #addMacToWiFiBlock('00-00-00-00-00-11', 'test')
-#getClientList()
-#getStatistics()
+getClientList()
+getStatistics()
