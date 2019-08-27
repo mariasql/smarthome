@@ -22,8 +22,7 @@ os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
 camera_ip = config.get("camera_ip", "")
 camera_url = config.get("camera_url", "").format(camera_ip)
 
-slack_token = config.get("slack_token", "")
-slack_channel = config.get("slack_channel", "")
+slack_url = config.get("slack_url", "")
 
 
 def capture_snapshot():
@@ -55,7 +54,7 @@ def capture_snapshot():
     cv2.destroyAllWindows()
 
 
-def post_slack(text_msg):
+def post_slack(text_msg,slack_url):
     try:
         slack = Slacker(slack_token)
 

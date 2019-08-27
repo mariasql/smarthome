@@ -19,14 +19,13 @@ os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
 
 camera_ip = config.get("camera_ip", "")
 camera_url = config.get("camera_url", "").format(camera_ip)
-slack_token = config.get("slack_token", "")
-slack_channel = config.get("slack_channel", "")
+slack_url = config.get("slack_url", "")
 minipc_ip = config.get("minipc_ip", "")
 host_ip = config.get("host_ip", "")
 
 image_title = "rec_frame.jpg"
 
-def capture_snapshot(camera_url,image_title,slack_token,slack_channel):
+def capture_snapshot(camera_url,image_title,slack_url):
     dirname = r""
     # video path
     cap = cv2.VideoCapture(camera_url, cv2.CAP_FFMPEG)
@@ -51,7 +50,7 @@ def capture_snapshot(camera_url,image_title,slack_token,slack_channel):
         }
 
         try:
-            r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
+            #r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
         except:
             message = str(sys.exc_info())
             post_slack(message)
@@ -64,16 +63,20 @@ def capture_snapshot(camera_url,image_title,slack_token,slack_channel):
 logfilename = r"smarthome.log"
 logfile = open(logfilename, 'a')
 
-def post_slack(text_msg,slack_token,slack_channel):
-    try:
-        slack = Slacker(slack_token)
+def post_slack(text_msg,slack_url):
+    webhook_url = slack_url
+    slack_data = {'text': text_msg}
 
-        slack.chat.post_message(slack_channel, text_msg)
+    response = requests.post(
+        webhook_url, data=json.dumps(slack_data),
+        headers={'Content-Type': 'application/json'}
+    )
+    if response.status_code != 200:
+        raise ValueError(
+            'Request to slack returned an error %s, the response is:\n%s'
+            % (response.status_code, response.text)
+        )
 
-    except Exception as exc:
-        exception = str(exc)
-        print ("Error posting to Slack, {}".format(exception))
-        print (text_msg)
 
 def setlogging():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s  - %(message)s',
@@ -102,7 +105,7 @@ old = sens
 
 for i, se in enumerate(sens['sensors']):
     txt = 'Name:{}, status:{}, type: {}'.format(se['name'],se['status'],se['type'])
-    post_slack(txt,slack_token,slack_channel)
+    post_slack(txt,slack_url)
 
 while 1:
     try:
@@ -115,26 +118,26 @@ while 1:
                     if str(se['status']) == "0" or str(se['status']) == "128":
                         txt = time.ctime() + ': Door closed ( status {} )'.format(str(se['status']))
                         logging.info(txt)
-                        post_slack(txt,slack_token,slack_channel)
+                        post_slack(txt,slack_url)
                     elif str(se['status']) == "16" or str(se['status']) == "144":
                         txt = time.ctime() + ': Door opened ( status {})'.format(str(se['status']))
                         logging.info(txt)
-                        post_slack(txt,slack_token,slack_channel)
+                        post_slack(txt,slack_url)
 
                     elif str(se['status']) == "48":
                         txt = time.ctime() + ':Door tampered ( status ' + str(se['status']) + ')'
                         logging.info(txt)
-                        post_slack(txt,slack_token,slack_channel)
+                        post_slack(txt,slack_url)
 
                 elif sType == 'Motion Sensor' and str(se['status']) == "0" or sType == "Motion Sensor" and str(se['status']) == "32" or sType == "Motion Sensor" and str(se['status']) == "128":
                     txt = time.ctime() + ": No Motion: " + str(se['status'])
                     logging.info(txt)
-                    post_slack(txt,slack_token,slack_channel)
+                    post_slack(txt,slack_url)
 
                 elif sType == "Motion Sensor" and str(se['status']) == "48":
                     txt = time.ctime() + ": Motion Detected: " + str(se['status'])
                     logging.info(txt)
-                    post_slack(txt,slack_token,slack_channel)
+                    post_slack(txt,slack_url)
 
                 old = sens
 

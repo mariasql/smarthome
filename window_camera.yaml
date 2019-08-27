@@ -1,7 +1,5 @@
 {
-    "slack_token": "xoxp-418797077840-420549511911-420090210225-01c9b2a42124c96bce1815b3dfc2059c",
+    "slack_url": "https://hooks.slack.com/services/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",
     "camera_ip": "192.168.1.108",
-    "camera_url": "rtsp://admin:admin@{}/onvif1",
-    "slack_channel": "#outdoor"
-
+    "camera_url": "rtsp://admin:admin@{}/onvif1"
 }
