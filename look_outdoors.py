@@ -11,8 +11,6 @@ import json
 
 camera_ip = sys.argv[1]
 
-config_content = open("config.yaml")
-
 config_content = open("window_camera.yaml")
 config = json.load(config_content)
 
