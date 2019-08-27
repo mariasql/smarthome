@@ -13,7 +13,7 @@ camera_ip = sys.argv[1]
 
 config_content = open("config.yaml")
 
-config_content = open(config_file)
+config_content = open("window_camera.yaml")
 config = json.load(config_content)
 
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
@@ -26,7 +26,8 @@ camera_url = config.get("camera_url", "").format(camera_ip)
 
 slack_url = config.get("slack_url", "")
 slack_token = config.get("slack_token", "")
-
+slack_channel = config.get("slack_channel", "")
+to
 
 def capture_snapshot(slack_token):
     dirname = r""
@@ -48,7 +49,7 @@ def capture_snapshot(slack_token):
         payload = {
             "filename": "outdoor.jpg",
             "token": slack_token,
-            "channels": ['#broadlink'],
+            "channels": [slack_channel],
         }
 
         r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
