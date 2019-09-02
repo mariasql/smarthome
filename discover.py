@@ -96,8 +96,8 @@ setlogging()
 
 
 
-#devices = broadlink.S1C(host=(host_ip,80), mac="B4:43:0D:FE:E2:1F") # Change to your S1C MAC an IP
-devices = broadlink.S1C(host=(host_ip,80), mac=broadlink_mac)
+devices = broadlink.S1C(host=(host_ip,80), mac="B4:43:0D:FE:E2:1F") # Change to your S1C MAC an IP
+#devices = broadlink.S1C(host=(host_ip,80), mac=broadlink_mac)
 
 devices.auth()
 
