@@ -1,4 +1,14 @@
 import urllib2
+import subprocess
+
+bashCommand = "(sleep 3;echo admin;sleep 3;echo admin;sleep 3;echo ?;sleep 3;) | telnet 192.168.1.1"
+
+process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+output, error = process.communicate()
+
+print process
+
+
 #import database_statistics
 
 def getRouterUrl():
@@ -60,7 +70,7 @@ def getStatistics():
 
     return stats
 
-SetupRouterConnection()
+#SetupRouterConnection()
 #addMacToWiFiBlock('00-00-00-00-00-11', 'test')
-getClientList()
-getStatistics()
+#getClientList()
+#getStatistics()
