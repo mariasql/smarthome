@@ -118,11 +118,12 @@ while 1:
                 sName = se['name']
                 sType = se['type']
                 if sType == "Door Sensor":
-                    if str(se['status']) == "0" or str(se['status']) == "128":
+                    if (str(se['status']) in ("0" , "128") and str(old['sensors'][i]['status']) not in ("0","128")):
                         txt = time.ctime() + ': Door closed ( status {} )'.format(str(se['status']))
                         logging.info(txt)
                         post_slack(txt,slack_url)
-                    elif str(se['status']) == "16" or str(se['status']) == "144":
+                    elif (str(se['status']) in ( "16" , "144") and
+                          str(old['sensors'][i]['status']) not in ( "16" , "144") ):
                         txt = time.ctime() + ': Door opened ( status {})'.format(str(se['status']))
                         logging.info(txt)
                         post_slack(txt,slack_url)
@@ -132,17 +133,18 @@ while 1:
                         logging.info(txt)
                         post_slack(txt,slack_url)
 
-                elif sType == 'Motion Sensor' and str(se['status']) == "0" or sType == "Motion Sensor" and str(se['status']) == "32" or sType == "Motion Sensor" and str(se['status']) == "128":
-                    txt = time.ctime() + ": No Motion: " + str(se['status'])
-                    logging.info(txt)
-                    post_slack(txt,slack_url)
+                elif sType == 'Motion Sensor':
+                    if (str(se['status']) in ("0", "32", "128") and str(old['sensors'][i]['status']) not in ("0", "32", "128")):
+                        txt = time.ctime() + ": No Motion: " + str(se['status'])
+                        logging.info(txt)
+                        post_slack(txt,slack_url)
 
-                elif sType == "Motion Sensor" and str(se['status']) == "48":
-                    txt = time.ctime() + ": Motion Detected: " + str(se['status'])
-                    logging.info(txt)
-                    post_slack(txt,slack_url)
+                    elif str(se['status']) == "48":
+                        txt = time.ctime() + ": Motion Detected: " + str(se['status'])
+                        logging.info(txt)
+                        post_slack(txt,slack_url)
 
-                    capture_snapshot(slack_token,slack_url)
+                        capture_snapshot(slack_token,slack_url)
 
                 old = sens
 
