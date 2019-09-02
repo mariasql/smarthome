@@ -26,7 +26,7 @@ slack_url = config.get("slack_url", "")
 slack_token = config.get("slack_token", "")
 minipc_ip = config.get("minipc_ip", "")
 host_ip = config.get("host_ip", "")
-broadlink_mac = config.get("mac", "")
+broadlink_mac = config.get("broadlink_mac", "")
 
 
 
@@ -96,8 +96,8 @@ setlogging()
 
 
 
-devices = broadlink.S1C(host=(host_ip,80), mac="B4:43:0D:FE:E2:1F") # Change to your S1C MAC an IP
-#devices = broadlink.S1C(host=(host_ip,80), mac=broadlink_mac)
+#devices = broadlink.S1C(host=(host_ip,80), mac="B4:43:0D:FE:E2:1F") # Change to your S1C MAC an IP
+devices = broadlink.S1C(host=(host_ip,80), mac=broadlink_mac)
 
 devices.auth()
 
