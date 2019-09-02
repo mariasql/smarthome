@@ -19,11 +19,14 @@ config = json.load(config_content)
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
 
 camera_ip = config.get("camera_ip", "")
-camera_url = config.get("camera_url", "").format(camera_ip)
+#camera_url = config.get("camera_url", "").format(camera_ip)
+camera_pass = config.get("camera_password", "")
+camera_url = "rtsp://admin:{}@{}/onvif1".format(camera_pass,camera_ip)
 slack_url = config.get("slack_url", "")
 slack_token = config.get("slack_token", "")
 minipc_ip = config.get("minipc_ip", "")
 host_ip = config.get("host_ip", "")
+broadlink_mac = config.get("mac", "")
 
 
 
@@ -44,7 +47,7 @@ def post_slack(text_msg,slack_url):
             % (response.status_code, response.text)
         )
 
-def capture_snapshot(slack_token):
+def capture_snapshot(slack_token,slack_url):
     dirname = r""
     # video path
     cap = cv2.VideoCapture(camera_url, cv2.CAP_FFMPEG)
@@ -67,7 +70,12 @@ def capture_snapshot(slack_token):
             "channels": ['#broadlink'],
         }
 
-        r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
+        try:
+            r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
+            post_slack(r, slack_url)
+        except Exception as e:
+            message = str(sys.exc_info())
+            post_slack(message, slack_url)
 
     cap.release()
     cv2.destroyAllWindows()
@@ -88,7 +96,8 @@ setlogging()
 
 
 
-devices = broadlink.S1C(host=(host_ip,80), mac="B4:43:0D:FE:E2:1F") # Change to your S1C MAC an IP
+#devices = broadlink.S1C(host=(host_ip,80), mac="B4:43:0D:FE:E2:1F") # Change to your S1C MAC an IP
+devices = broadlink.S1C(host=(host_ip,80), mac=broadlink_mac)
 
 devices.auth()
 
@@ -133,7 +142,7 @@ while 1:
                     logging.info(txt)
                     post_slack(txt,slack_url)
 
-                    #capture_snapshot(slack_token)
+                    capture_snapshot(slack_token,slack_url)
 
                 old = sens
 

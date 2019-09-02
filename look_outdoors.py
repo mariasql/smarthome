@@ -21,6 +21,10 @@ os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
 
 #camera_ip = config.get("camera_ip", "")
 camera_url = config.get("camera_url", "").format(camera_ip)
+camera_pass = config.get("camera_password", "")
+
+if camera_ip == '192.168.1.108':
+    camera_url = "rtsp://admin:{}@{}/onvif1".format(camera_pass,camera_ip)
 
 slack_url = config.get("slack_url", "")
 slack_token = config.get("slack_token", "")
@@ -64,7 +68,7 @@ def capture_snapshot(slack_token):
 
 def post_slack(text_msg,slack_url):
     webhook_url = slack_url
-    slack_data = {'text': text_msg}
+    slack_data = {'text': "{}".format(text_msg)}
 
     response = requests.post(
         webhook_url, data=json.dumps(slack_data),
