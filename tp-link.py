@@ -14,7 +14,7 @@ def SetupRouterConnection():
 
    p.add_password(None, getRouterUrl(), username, password)
 
-   handler = urllib2.--(p)
+   handler = urllib2(p)
    opener = urllib2.build_opener(handler)
    urllib2.install_opener(opener)
    return True
