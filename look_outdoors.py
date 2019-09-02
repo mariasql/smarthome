@@ -25,7 +25,6 @@ camera_url = config.get("camera_url", "").format(camera_ip)
 slack_url = config.get("slack_url", "")
 slack_token = config.get("slack_token", "")
 slack_channel = config.get("slack_channel", "")
-to
 
 def capture_snapshot(slack_token):
     dirname = r""
@@ -50,7 +49,14 @@ def capture_snapshot(slack_token):
             "channels": [slack_channel],
         }
 
-        r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
+        try:
+            r = requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
+            post_slack(r, slack_url)
+        except Exception as e:
+            message = str(sys.exc_info())
+            post_slack(message,slack_url)
+
+
 
     cap.release()
     cv2.destroyAllWindows()
@@ -76,4 +82,4 @@ try:
     post_slack('Image posted. Have a great day',slack_url)
 except Exception as e:
     message = str(sys.exc_info())
-    post_slack(message)
+    post_slack(message,slack_url)
