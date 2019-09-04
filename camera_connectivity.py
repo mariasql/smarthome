@@ -24,4 +24,4 @@ def post_slack(text_msg,slack_url):
 
 try:
     result = subprocess.run(['telnet 192.168.1.102', '-l'], stdout=subprocess.PIPE)
-    post_slack(result,slack_url)
+    post_slack('camera status: {}'.format(result),slack_url)
