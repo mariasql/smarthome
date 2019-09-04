@@ -24,11 +24,22 @@ def post_slack(text_msg,slack_url):
 
 
 try:
-    bashCommand = "telnet 192.168.1.102"
-    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output, error = process.communicate()
+    camera_list = []
+    camera_list.append('192.168.1.102')
+    camera_list.append('192.168.1.108')
 
-    post_slack('camera status: {}'.format(error),slack_url)
+    for camera in camera_list:
+        bashCommand = "telnet {}".format(camera)
+        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output, error = process.communicate()
+
+        if 'connection refused' in error:
+            post_slack('camera {} is online'.format(camera),slack_url)
+        else
+            if 'No route to host' in error:
+                post_slack('ALERT: camera {} has been disconnected!'.format(camera), slack_url)
+            else:
+                post_slack('ALERT: unclear camera {} status! {}'.format(camera,error), slack_url)
 except Exception as e:
     message = str(sys.exc_info())
-    post_slack('camera status check have failed: {}'.format(message),slack_url)
+    post_slack('camera {} status check have failed: {}'.format(camera,message),slack_url)
