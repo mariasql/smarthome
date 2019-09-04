@@ -35,7 +35,7 @@ try:
 
         if 'connection refused' in error:
             post_slack('camera {} is online'.format(camera),slack_url)
-        else
+        else:
             if 'No route to host' in error:
                 post_slack('ALERT: camera {} has been disconnected!'.format(camera), slack_url)
             else:
