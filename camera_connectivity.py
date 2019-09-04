@@ -25,10 +25,9 @@ def post_slack(text_msg,slack_url):
 
 try:
     bashCommand = "telnet 192.168.1.102"
-    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
+    result=subprocess.run([bashCommand, '-l'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
-    post_slack('camera status: {}'.format(process),slack_url)
+    post_slack('camera status: {}'.format(result),slack_url)
 except Exception as e:
     message = str(sys.exc_info())
     post_slack('camera status check have failed: {}'.format(message),slack_url)
