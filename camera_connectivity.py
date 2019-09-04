@@ -53,7 +53,7 @@ try:
             new_status[camera] = "online"
         else:
             if 'No route to host' in error:
-                if prev_status == "online":
+                if 'offline' not in prev_status:
                     post_slack('ALERT: camera {} has been disconnected!'.format(camera), slack_url)
                 new_status[camera] = "offline"
             else:
