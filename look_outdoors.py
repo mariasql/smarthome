@@ -11,7 +11,7 @@ import json
 
 camera_ip = sys.argv[1]
 
-config_content = open("window_camera.yaml")
+config_content = open("./config_files/window_camera.yaml")
 config = json.load(config_content)
 
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
@@ -64,6 +64,8 @@ def capture_snapshot(slack_token):
 
     cap.release()
     cv2.destroyAllWindows()
+    if os.path.exists("outdoor.jpg"):
+        os.remove("outdoor.jpg")
 
 
 def post_slack(text_msg,slack_url):
