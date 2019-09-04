@@ -8,6 +8,17 @@ config_content = open("../config_files/config.yaml")
 config = json.load(config_content)
 slack_url = config.get("slack_url", "")
 
+
+camera_statuses = open("../camera_statuses.yaml", "w")
+#curr_camera_statuses = json.load(camera_statuses)
+
+camera_statuses.write('{ "192.168.1.102": "online", "192.168.1.108": "online" ')
+camera_statuses.close()
+
+
+status = config.get("slack_url", "")
+
+
 def post_slack(text_msg,slack_url):
     webhook_url = slack_url
     slack_data = {'text': "{}".format(text_msg)}
@@ -33,7 +44,7 @@ try:
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, error = process.communicate()
 
-        if 'connection refused' in error:
+        if 'Connection refused' in error:
             post_slack('camera {} is online'.format(camera),slack_url)
         else:
             if 'No route to host' in error:
