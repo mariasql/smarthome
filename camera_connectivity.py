@@ -40,6 +40,7 @@ try:
                 post_slack('ALERT: camera {} has been disconnected!'.format(camera), slack_url)
             else:
                 post_slack('ALERT: unclear camera {} status! {}'.format(camera,error), slack_url)
+
 except Exception as e:
     message = str(sys.exc_info())
     post_slack('camera {} status check have failed: {}'.format(camera,message),slack_url)
