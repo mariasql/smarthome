@@ -1,4 +1,3 @@
-import os
 import requests
 import subprocess
 import json
@@ -10,13 +9,12 @@ slack_url = config.get("slack_url", "")
 
 
 camera_statuses = open("../camera_statuses.yaml", "w")
-#curr_camera_statuses = json.load(camera_statuses)
 
-camera_statuses.write('{ "192.168.1.102": "online", "192.168.1.108": "online" ')
-camera_statuses.close()
+new_status = {"192.198.1.102": "unknown", "192.168.1.108": "unknown"}
 
+camera_statuses.write(new_status)
 
-status = config.get("slack_url", "")
+curr_camera_statuses = json.load(camera_statuses)
 
 
 def post_slack(text_msg,slack_url):
@@ -44,13 +42,26 @@ try:
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, error = process.communicate()
 
+        prev_status = config.get(camera, "")
+        new_status = {"192.198.1.102": "unknown", "192.168.1.108": "unknown"}
+
         if 'Connection refused' in error:
-            post_slack('camera {} is online'.format(camera),slack_url)
+            if 'online' not in prev_status:
+                post_slack('ALERT: camera {} is back online!'.format(camera),slack_url)
+            new_status[camera] = "online"
         else:
             if 'No route to host' in error:
-                post_slack('ALERT: camera {} has been disconnected!'.format(camera), slack_url)
+                if prev_status == "online":
+                    post_slack('ALERT: camera {} has been disconnected!'.format(camera), slack_url)
+                new_status[camera] = "offline"
             else:
-                post_slack('ALERT: unclear camera {} status! {}'.format(camera,error), slack_url)
+                if 'unknown' not in prev_status:
+                    post_slack('ALERT: unclear camera {} status! {}'.format(camera,error), slack_url)
+                new_status[camera] = "unknown"
+
+    post_slack('Camera statuses: {}'.format(new_status), slack_url)
+    camera_statuses.write(new_status)
+
 
 except Exception as e:
     message = str(sys.exc_info())
