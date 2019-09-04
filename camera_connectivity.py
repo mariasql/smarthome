@@ -10,7 +10,7 @@ slack_url = config.get("slack_url", "")
 
 camera_statuses = open("../camera_statuses.yaml", "w")
 
-new_status = {"192.198.1.102": "unknown", "192.168.1.108": "unknown"}
+new_status = '"192.198.1.102": "unknown", "192.168.1.108": "unknown"'
 
 camera_statuses.write(new_status)
 
@@ -59,7 +59,7 @@ try:
                     post_slack('ALERT: unclear camera {} status! {}'.format(camera,error), slack_url)
                 new_status[camera] = "unknown"
 
-    post_slack('Camera statuses: {}'.format(new_status), slack_url)
+    post_slack('Camera statuses: {}'.format(str(new_status)), slack_url)
     camera_statuses.write(new_status)
 
 
