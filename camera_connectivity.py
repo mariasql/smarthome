@@ -38,6 +38,7 @@ try:
     camera_list = []
     camera_list.append('192.168.1.102')
     camera_list.append('192.168.1.108')
+    new_status = {"192.198.1.102": "unknown", "192.168.1.108": "unknown"}
 
     for camera in camera_list:
         bashCommand = "telnet {}".format(camera)
@@ -45,7 +46,6 @@ try:
         output, error = process.communicate()
 
         prev_status = config.get(camera, "")
-        new_status = {"192.198.1.102": "unknown", "192.168.1.108": "unknown"}
 
         if 'Connection refused' in error:
             if 'online' not in prev_status:
