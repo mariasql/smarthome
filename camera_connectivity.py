@@ -2,6 +2,7 @@ import os
 import requests
 import subprocess
 import json
+import sys
 
 config_content = open("../config_files/config.yaml")
 config = json.load(config_content)
