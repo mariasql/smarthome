@@ -28,7 +28,7 @@ try:
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
-    post_slack('camera status: {}'.format(process.communicate()),slack_url)
+    post_slack('camera status: {}'.format(error),slack_url)
 except Exception as e:
     message = str(sys.exc_info())
     post_slack('camera status check have failed: {}'.format(message),slack_url)
