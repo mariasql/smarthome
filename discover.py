@@ -12,7 +12,7 @@ import requests
 import sys
 import json
 
-config_content = open("config.yaml")
+config_content = open("../config_files/config.yaml")
 
 config = json.load(config_content)
 
@@ -30,7 +30,7 @@ broadlink_mac = config.get("broadlink_mac", "")
 
 
 
-logfilename = r"smarthome.log"
+logfilename = r"../smarthome.log"
 logfile = open(logfilename, 'a')
 
 def post_slack(text_msg,slack_url):
@@ -79,6 +79,8 @@ def capture_snapshot(slack_token,slack_url):
 
     cap.release()
     cv2.destroyAllWindows()
+    if os.path.exists("outdoor.jpg"):
+        os.remove("outdoor.jpg")
 
 def setlogging():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s  - %(message)s',
