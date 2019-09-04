@@ -11,7 +11,7 @@ import json
 
 camera_ip = sys.argv[1]
 
-config_content = open("./config_files/window_camera.yaml")
+config_content = open("../config_files/window_camera.yaml")
 config = json.load(config_content)
 
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
