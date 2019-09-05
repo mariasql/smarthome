@@ -24,7 +24,7 @@ def post_slack(text_msg,slack_url):
 
 def is_connected():
     try:
-        socket.create_connection(("www.google.com", timeout=5)
+        socket.create_connection(("www.google.com", 10)
         socket.close()
         return True
     except OSError:
