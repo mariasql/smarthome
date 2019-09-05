@@ -24,7 +24,8 @@ def post_slack(text_msg,slack_url):
 
 def is_connected():
     try:
-        socket.create_connection(("www.google.com", timeout=10)
+        socket.create_connection(("www.google.com", timeout=5)
+        socket.close()
         return True
     except OSError:
         pass
@@ -39,3 +40,5 @@ with open('../internet_status.txt', 'a+') as f:
     else:
         f.write("{},{}\r\n".format(log_time,'false'))
         print ('Not connected to the internet')
+
+#ocket.create_connection(("www.google.com", timeout=10)
