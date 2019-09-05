@@ -66,7 +66,7 @@ try:
                     post_slack('ALERT: unclear camera {} status! {}'.format(camera,error), slack_url)
                     new_status[camera] = "unknown"
 
-    post_slack('Camera statuses: {}'.format(str(new_status)), slack_url)
+    #post_slack('Camera statuses: {}'.format(str(new_status)), slack_url)
 
     with open('../camera_statuses.yaml', 'w') as f:
         json.dump(new_status, f)

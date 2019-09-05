@@ -3,9 +3,9 @@ import requests
 import time
 import json
 
-config_content = open("../config_files/config.yaml")
-config = json.load(config_content)
-slack_url = config.get("slack_url", "")
+#config_content = open("../config_files/config.yaml")
+#config = json.load(config_content)
+#slack_url = config.get("slack_url", "")
 
 def post_slack(text_msg,slack_url):
     webhook_url = slack_url
@@ -24,7 +24,7 @@ def post_slack(text_msg,slack_url):
 
 def is_connected():
     try:
-        socket.create_connection(("www.google.com", 80))
+        socket.create_connection(("www.google.com", timeout=10)
         return True
     except OSError:
         pass
@@ -34,8 +34,8 @@ def is_connected():
 log_time = time.strftime("%Y%m%d-%H%M%S")
 with open('../internet_status.txt', 'a+') as f:
     if is_connected():
-        f.write("{},{}".format(log_time,'true'))
+        f.write("{},{}\r\n".format(log_time,'true'))
         print ('Connected to the internet')
     else:
-        f.write("{},{}".format(log_time,'false'))
+        f.write("{},{}\r\n".format(log_time,'false'))
         print ('Not connected to the internet')
