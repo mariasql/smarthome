@@ -47,13 +47,17 @@ try:
 
         if 'Connection refused' in error:
             if 'online' not in prev_status:
-                post_slack('ALERT: camera {} is back online!'.format(camera),slack_url)
+                post_slack('ALERT: camera {} is back online!'.format(camera), slack_url)
             new_status[camera] = "online"
+            post_slack('Camera statuses: {}'.format(str(new_status)), slack_url)
+
         else:
             if 'No route to host' in error:
                 if 'offline' not in prev_status:
                     post_slack('ALERT: camera {} has been disconnected!'.format(camera), slack_url)
                 new_status[camera] = "offline"
+                post_slack('Camera statuses: {}'.format(str(new_status)), slack_url)
+
             else:
                 if 'unknown' not in prev_status:
                     post_slack('ALERT: unclear camera {} status! {}'.format(camera,error), slack_url)
@@ -67,4 +71,4 @@ try:
 
 except Exception as e:
     message = str(sys.exc_info())
-    post_slack('camera {} status check have failed: {}'.format(camera,message),slack_url)
+    post_slack('camera {} status check have failed: {}'.format(camera, message), slack_url)
