@@ -13,7 +13,7 @@ slack_url = config.get("slack_url", "")
 #camera_statuses.write(new_status)
 #camera_statuses.close()
 
-camera_statuses = open("../camera_statuses.yaml")
+camera_statuses = open("../camera_statuses.yaml","r")
 prev_camera_statuses = json.load(camera_statuses)
 camera_statuses.close()
 
