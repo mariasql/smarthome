@@ -7,16 +7,14 @@ config_content = open("../config_files/config.yaml")
 config = json.load(config_content)
 slack_url = config.get("slack_url", "")
 
-
-#camera_statuses = open("../camera_statuses.yaml", "w")
-
-#new_status = '{"192.198.1.102": "unknown", "192.168.1.108": "unknown"}'
-
-#camera_statuses.write(new_status)
-#camera_statuses.close()
+#file initialization
+camera_statuses = open("../camera_statuses.yaml", "w")
+new_status = '{"192.198.1.102": "unknown", "192.168.1.108": "unknown"}'
+camera_statuses.write(new_status)
+camera_statuses.close()
 
 camera_statuses = open("../camera_statuses.yaml")
-curr_camera_statuses = json.load(camera_statuses)
+prev_camera_statuses = json.load(camera_statuses)
 camera_statuses.close()
 
 def post_slack(text_msg,slack_url):
@@ -45,7 +43,7 @@ try:
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, error = process.communicate()
 
-        prev_status = config.get(camera, "")
+        prev_status = prev_camera_statuses.get(camera, "")
 
         if 'Connection refused' in error:
             if 'online' not in prev_status:
