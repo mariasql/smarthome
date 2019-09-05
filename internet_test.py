@@ -1,6 +1,7 @@
 import socket
 import requests
 import time
+import json
 
 config_content = open("../config_files/config.yaml")
 config = json.load(config_content)
@@ -36,5 +37,7 @@ log_time = time.strftime("%Y%m%d-%H%M%S")
 with open('../internet_status.txt', 'a+') as f:
     if is_connected():
         f.write("{},{}".format(log_time,'true'))
+        print ('Connected to the internet')
     else:
         f.write("{},{}".format(log_time,'false'))
+        print ('Not connected to the internet')
