@@ -36,7 +36,7 @@ try:
     camera_list = []
     camera_list.append('192.168.1.102')
     camera_list.append('192.168.1.108')
-    new_status = {"192.198.1.102": "unknown", "192.168.1.108": "unknown"}
+    new_status = {"192.168.1.102": "unknown", "192.168.1.108": "unknown"}
 
     for camera in camera_list:
         bashCommand = "telnet {}".format(camera)
@@ -49,14 +49,14 @@ try:
             if 'online' not in prev_status:
                 post_slack('ALERT: camera {} is back online!'.format(camera), slack_url)
             new_status[camera] = "online"
-            post_slack('Camera statuses: {}'.format(str(new_status)), slack_url)
+            #post_slack('Camera statuses: {}'.format(str(new_status)), slack_url)
 
         else:
             if 'No route to host' in error:
                 if 'offline' not in prev_status:
                     post_slack('ALERT: camera {} has been disconnected!'.format(camera), slack_url)
                 new_status[camera] = "offline"
-                post_slack('Camera statuses: {}'.format(str(new_status)), slack_url)
+                #post_slack('Camera statuses: {}'.format(str(new_status)), slack_url)
 
             else:
                 if 'unknown' not in prev_status:
