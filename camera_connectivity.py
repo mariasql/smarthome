@@ -57,7 +57,7 @@ try:
             else:
                 if 'unknown' not in prev_status:
                     post_slack('ALERT: unclear camera {} status! {}'.format(camera,error), slack_url)
-                new_status[camera] = "unknown"
+                    new_status[camera] = "unknown"
 
     post_slack('Camera statuses: {}'.format(str(new_status)), slack_url)
 
