@@ -8,10 +8,10 @@ config = json.load(config_content)
 slack_url = config.get("slack_url", "")
 
 #file initialization#
-#camera_statuses = open("../camera_statuses.yaml", "w")
-#new_status = '{"192.198.1.102": "unknown", "192.168.1.108": "unknown"}'
-#camera_statuses.write(new_status)
-#camera_statuses.close()
+camera_statuses = open("../camera_statuses.yaml", "w")
+new_status = '{"192.198.1.102": "unknown", "192.168.1.108": "unknown"}'
+camera_statuses.write(new_status)
+camera_statuses.close()
 
 camera_statuses = open("../camera_statuses.yaml","r")
 prev_camera_statuses = json.load(camera_statuses)
@@ -65,9 +65,8 @@ try:
 
     post_slack('Camera statuses: {}'.format(str(new_status)), slack_url)
 
-    camera_statuses = open("../camera_statuses.yaml", "w")
-    camera_statuses.write(str(new_status))
-    camera_statuses.close()
+    with open('../camera_statuses.yaml', 'w') as f:
+        json.dump(new_status, f)
 
 except Exception as e:
     message = str(sys.exc_info())
