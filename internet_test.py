@@ -69,8 +69,11 @@ def read_and_clean():
                 chd += '-50,'
                 chco += 'FE2E2E|'
 
-        chartt =  '<p><img src="https://image-charts.com/chart?cht=bvs&chs=700x125&chd=a:{}&chl={}&chco={}"</p>'.format(
+        #chartt =  '<p><img src="https://image-charts.com/chart?cht=bvs&chs=700x125&chd=a:{}&chl={}&chco={}"</p>'.format(
+        #            chd[:-1], chtt[:-1], chco[:-1])
+        chartt =  'https://image-charts.com/chart?cht=bvs&chs=700x125&chd=a:{}&chl={}&chco={}'.format(
                     chd[:-1], chtt[:-1], chco[:-1])
+
 
         today = datetime.now().date()
         log_date = min(logged_days)
