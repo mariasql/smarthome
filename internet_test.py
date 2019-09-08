@@ -40,7 +40,7 @@ def read_and_clean():
         chtt = ''
         chd = ''
         for record in all_records:
-            chtt += '{},'.format(record[0])
+            chtt += '{}:{},'.format(record[0][9:11],record[0][12:14])
             chd += '{},'.format(record[1])
 
 
