@@ -39,13 +39,18 @@ def read_and_clean():
         all_records = list(reader)
         chtt = ''
         chd = ''
+        chco = ''
         for record in all_records:
             chtt += '{}:{},'.format(record[0][9:11],record[0][12:14])
-            chd += '{},'.format(record[1])
+            if record[1] == 'true':
+                chd += '50,'
+                chco +='00FF40|'
+            else:
+                chd += '-50,'
+                chco += 'FE2E2E|'
 
-
-        chartt =  '<p><img src="https://image-charts.com/chart?cht=lc&chs=700x125&chd=t:{}&chtt={}"</p>'.format(
-                    chd[:-1], chtt[:-1])
+        chartt =  '<p><img src="https://image-charts.com/chart?cht=lc&chs=700x125&chd=a:{}&chl={}&chco={}"</p>'.format(
+                    chd[:-1], chtt[:-1], chco[:-1])
 
         print (chartt)
 
