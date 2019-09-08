@@ -72,10 +72,10 @@ def read_and_clean():
 
         today = datetime.now().date()
         log_date = min(logged_days)
-        if log_date < today:
+        if log_date == today:
             post_img_slack(chartt, slack_url)
             os.rename('./internet_status.csv', './internet_status_{}.csv'.format(str(today)))
-            os.remove('./internet_status.csv')
+            #os.remove('./internet_status.csv')
 
 
         print (chartt)
