@@ -69,7 +69,7 @@ def read_and_clean():
         chartt =  '<p><img src="https://image-charts.com/chart?cht=bvs&chs=700x125&chd=a:{}&chl={}&chco={}"</p>'.format(
                     chd[:-1], chtt[:-1], chco[:-1])
 
-        today = datetime.datetime.now()
+        today = datetime.now()
         log_date = min(logged_days)
         if log_date < today:
             post_img_slack(chartt, slack_url)
