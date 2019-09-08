@@ -3,6 +3,7 @@ import requests
 import time
 import json
 import csv
+import sys
 
 config_content = open("../config_files/config.yaml")
 config = json.load(config_content)
@@ -54,14 +55,17 @@ def read_and_clean():
 
         print (chartt)
 
+try:
+    log_time = time.strftime("%Y%m%d-%H%M%S")
+    with open('../internet_status.csv', 'a+') as f:
+        if is_connected():
+            f.write("{},{}\r\n".format(log_time,'true'))
+            print ('Connected to the internet')
+        else:
+            f.write("{},{}\r\n".format(log_time,'false'))
+            print ('Not connected to the internet')
 
-log_time = time.strftime("%Y%m%d-%H%M%S")
-with open('../internet_status.csv', 'a+') as f:
-    if is_connected():
-        f.write("{},{}\r\n".format(log_time,'true'))
-        print ('Connected to the internet')
-    else:
-        f.write("{},{}\r\n".format(log_time,'false'))
-        print ('Not connected to the internet')
-
-read_and_clean()
+    read_and_clean()
+except Exception as e:
+    message = str(sys.exc_info())
+    post_slack('Internet test have failed: {}'.format(message), slack_url)
