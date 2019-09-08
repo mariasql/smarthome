@@ -58,4 +58,4 @@ with open('../internet_status.csv', 'a+') as f:
         f.write("{},{}\r\n".format(log_time,'false'))
         print ('Not connected to the internet')
 
-#ocket.create_connection(("www.google.com", timeout=10)
+read_and_clean()
