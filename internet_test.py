@@ -5,6 +5,7 @@ import json
 import csv
 import sys
 from datetime import date, datetime
+import os
 
 config_content = open("../config_files/config.yaml")
 config = json.load(config_content)
@@ -73,6 +74,8 @@ def read_and_clean():
         log_date = min(logged_days)
         if log_date < today:
             post_img_slack(chartt, slack_url)
+            os.rename('./internet_status.csv', './internet_status_{}.csv'.format(str(today)))
+            os.remove('./internet_status.csv')
 
 
         print (chartt)
