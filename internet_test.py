@@ -28,7 +28,8 @@ def post_slack(text_msg,slack_url):
         )
 def post_img_slack(img_url,slack_url):
     webhook_url = slack_url
-    slack_data = {'image_url': "{}".format(img_url)}
+    accessory = { "type": "image",'image_url': "{}".format(img_url)}
+    slack_data = {"accessory": accessory}
 
     response = requests.post(
         webhook_url, data=json.dumps(slack_data),
