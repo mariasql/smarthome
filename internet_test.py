@@ -61,7 +61,7 @@ def read_and_clean():
         logged_days = []
         for record in all_records:
             logged_days.append(datetime.strptime(record[0][0:8], "%Y%m%d").date())
-            chtt += '{}:{}|'.format(record[0][9:10],record[0][11:12])
+            chtt += '{}:{}|'.format(record[0][9:11],record[0][12:14])
             if record[1] == 'true':
                 chd += '50,'
                 chco +='00FF40|'
