@@ -4,7 +4,7 @@ import time
 import json
 import csv
 import sys
-import datetime
+from datetime import date, datetime
 
 config_content = open("../config_files/config.yaml")
 config = json.load(config_content)
