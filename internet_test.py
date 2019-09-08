@@ -41,7 +41,7 @@ def read_and_clean():
         chd = ''
         chco = ''
         for record in all_records:
-            chtt += '{}:{},'.format(record[0][9:11],record[0][12:14])
+            chtt += '{}:{}|'.format(record[0][9:11],record[0][12:14])
             if record[1] == 'true':
                 chd += '50,'
                 chco +='00FF40|'
@@ -49,7 +49,7 @@ def read_and_clean():
                 chd += '-50,'
                 chco += 'FE2E2E|'
 
-        chartt =  '<p><img src="https://image-charts.com/chart?cht=lc&chs=700x125&chd=a:{}&chl={}&chco={}"</p>'.format(
+        chartt =  '<p><img src="https://image-charts.com/chart?cht=bvs&chs=700x125&chd=a:{}&chl={}&chco={}"</p>'.format(
                     chd[:-1], chtt[:-1], chco[:-1])
 
         print (chartt)
