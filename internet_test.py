@@ -43,8 +43,9 @@ def read_and_clean():
             chtt += '{},'.format(record[0])
             chd += '{},'.format(record[1])
 
-        chartt =  '<img src="https://image-charts.com/chart?chs=700x125&chd=t:{}&chtt={}"</p>'.format(
-                    chd, chtt)
+
+        chartt =  '<p><img src="https://image-charts.com/chart?cht=lc&chs=700x125&chd=t:{}&chtt={}"</p>'.format(
+                    chd[:-1], chtt[:-1])
 
         print (chartt)
 
