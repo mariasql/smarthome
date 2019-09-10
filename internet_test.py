@@ -28,23 +28,6 @@ def post_slack(text_msg,slack_url):
         )
 
 
-def post_img_slack(img_url,slack_url):
-    webhook_url = slack_url
-    attachments = []
-    attachments.append({'image_url': img_url})
-    slack_data = {"text": "Daily internet status", "attachments": attachments }
-
-    response = requests.post(
-        webhook_url, data=json.dumps(slack_data),
-        headers={'Content-Type': 'application/json'}
-    )
-    if response.status_code != 200:
-        raise ValueError(
-            'Request to slack returned an error %s, the response is:\n%s'
-            % (response.status_code, response.text)
-        )
-
-
 def is_connected():
     try:
         socket.create_connection(("www.google.com",80), 10)
@@ -59,7 +42,7 @@ try:
     log_time = time.strftime("%Y%m%d-%H%M")
     with open('../internet_status.csv', 'a+') as f:
         if is_connected():
-            f.write("{},{}\r\n".format(log_time,'true'))
+            #f.write("{},{}\r\n".format(log_time,'true'))
             print ('Connected to the internet')
         else:
             f.write("{},{}\r\n".format(log_time,'false'))
