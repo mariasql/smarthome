@@ -50,7 +50,7 @@ try:
             post_slack(chartt, slack_url)
             post_slack('Daily iternet status', slack_url)
             os.rename('../internet_status.csv', '../internet_status_{}.csv'.format(str(today)))
-            os.remove('../internet_status.csv')
+            #os.remove('../internet_status.csv')
 
         print (chartt)
 except Exception as e:
